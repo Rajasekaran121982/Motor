@@ -1,0 +1,31 @@
+.app-sidenav-content {
+    display: flex;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+   
+}
+
+.card-header{
+    font-size: large;
+    font-weight: 600;
+    text-align: center;
+    font-family:'Times New Roman', Times, serif;
+    background-image: url('src/assets/carbg.jpeg');
+}
+.form-row{
+    font-size: large;
+    font-weight: 600;
+    font-family:'Times New Roman', Times, serif;
+    background-image: url('src/assets/carbg.jpeg');
+}
+.card-body{
+
+    background-image: url('src/assets/carbg.jpeg');
+}
+.mat-drawer-container {
+    background-color: #ff0000; /* Replace with your desired background color */
+  }
+  
+
+  

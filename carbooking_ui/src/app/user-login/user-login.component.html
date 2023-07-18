@@ -1,0 +1,35 @@
+<div class="app-sidenav-content" >
+    
+    <!-- main app container -->
+    <div class="card m-3">
+      <h5 class="card-header">Login</h5>
+      <div class="card-body">
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+          <div class="form-row">
+            <div class="form-group col-5">
+              <label>EmailID</label>
+              <input type="text" formControlName="UserEmailId" class="form-control" [class.is-valid]="isFieldValid('UserEmailId')"
+              [class.is-invalid]="isFieldInvalid('UserEmailId')"/>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col">
+              <label>Password</label>
+              <input type="password" formControlName="password" class="form-control" [class.is-valid]="isFieldValid('password')"
+              [class.is-invalid]="isFieldInvalid('password')"/>
+            </div>
+            
+            
+          </div>
+          <div class="text-center">
+            <button class="btn btn-danger" type="button" (click)="onSubmit()">Login</button> 
+           
+          </div>
+          
+        </form>
+        
+      </div>
+    </div>
+    </div>
+    
+    

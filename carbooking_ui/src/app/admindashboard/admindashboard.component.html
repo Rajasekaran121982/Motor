@@ -1,0 +1,32 @@
+
+<div class="app-sidenav-content" >
+  <div class="card m-3">
+    <h5 class="card-header">Product Image Upload</h5>
+    <div class="card-body">
+  <form (ngSubmit)="onSubmit()" enctype="multipart/form-data">
+    <div class="form-row">
+      <div class="form-group col-5">
+    <input type="text" name="name" [(ngModel)]="car.name" placeholder="Car Name" required>
+  </div>
+  <div class="form-group col-5">
+    <input type="text" name="price" [(ngModel)]="car.price" placeholder="Car Price" required>
+  </div>
+    <div class="form-group col-5">
+    <input type="file" (change)="onFileChange($event)" required>
+  </div>
+  <div class="text-center">
+    <button class="btn btn-danger"  type="submit">Save</button>
+  </div>
+      
+    </div>
+    
+  </form>
+  </div>
+  </div>
+</div>
+
+
+      
+
+         
+  
