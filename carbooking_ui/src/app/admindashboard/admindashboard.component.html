@@ -19,8 +19,55 @@
   </div>
       
     </div>
+
+    
     
   </form>
+  <br>
+  <br>
+  <br>
+  <h5 class="card-header">Customer Booking Details</h5>
+  <div class="card-body">
+  <ng-container *ngIf="customerBookings.length > 0">
+    <cdk-virtual-scroll-viewport itemSize="10" style="height: 300px;">
+    <table mat-table [dataSource]="customerBookings" class="mat-elevation-z8">
+      <ng-container matColumnDef="bookingId">
+        <th mat-header-cell *matHeaderCellDef> Booking ID </th>
+        <td mat-cell *matCellDef="let booking"> {{ booking.bookingId }} </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef> Name </th>
+        <td mat-cell *matCellDef="let booking"> {{ booking.name }} </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="carModel">
+        <th mat-header-cell *matHeaderCellDef> Car Model </th>
+        <td mat-cell *matCellDef="let booking"> {{ booking.carModel }} </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="pickupDate">
+        <th mat-header-cell *matHeaderCellDef> Pickup Date </th>
+        <td mat-cell *matCellDef="let booking"> {{ booking.pickupDate }} </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="returnDate">
+        <th mat-header-cell *matHeaderCellDef> Return Date </th>
+        <td mat-cell *matCellDef="let booking"> {{ booking.returnDate }} </td>
+      </ng-container>
+  
+      <tr mat-header-row *matHeaderRowDef="['bookingId', 'name', 'carModel', 'pickupDate', 'returnDate']"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['bookingId', 'name', 'carModel', 'pickupDate', 'returnDate']"></tr>
+    </table>
+  </cdk-virtual-scroll-viewport>
+  </ng-container>
+  
+  <ng-container *ngIf="customerBookings.length === 0">
+    <p>No customer bookings available.</p>
+  </ng-container>
+</div>
+  
+
   </div>
   </div>
 </div>

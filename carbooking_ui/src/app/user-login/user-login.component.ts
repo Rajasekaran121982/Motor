@@ -51,8 +51,14 @@ export class UserLoginComponent  implements OnInit {
         this.http.post(url, this.formData,{ responseType: 'text' }).subscribe(
         
         (response: any) => {
-            // Handle the response here
+          console.log(response);
+          localStorage.setItem('user', JSON.stringify(response));
+          
+          setTimeout(() => {
             window.location.href = 'http://localhost:4200/userDashboard';
+          }, 1000);
+            // Handle the response here
+            // window.location.href = 'http://localhost:4200/userDashboard';
             console.log(response);
           },
           error => {

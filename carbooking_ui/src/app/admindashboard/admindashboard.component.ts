@@ -1,15 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { FileUploadService } from '../service/file-upload.service';
 import {Injectable} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
+import { CustomerBookingService} from '../service/customer-booking.service';
 @Component({
   selector: 'app-admindashboard',
   templateUrl: './admindashboard.component.html',
   styleUrls: ['./admindashboard.component.css']
 })
-export class AdmindashboardComponent {
+export class AdmindashboardComponent implements OnInit {
 
   car = {
     name: '',
@@ -18,10 +19,15 @@ export class AdmindashboardComponent {
   };
 
   selectedFile: File | null = null;
+  customerBookings: any[] = [];
 
-
-  constructor(private fileUploadService: FileUploadService , private http: HttpClient) {}
-
+  constructor(private fileUploadService: FileUploadService , private http: HttpClient, private customerBookingService: CustomerBookingService) {}
+  ngOnInit(): void {
+    this.customerBookingService.getCustomerBookings()
+      .subscribe((data: any[]) => {
+        this.customerBookings = data;
+      });
+  }
 
   onFileChange(event: any) {
     const fileList: FileList = event.target.files;

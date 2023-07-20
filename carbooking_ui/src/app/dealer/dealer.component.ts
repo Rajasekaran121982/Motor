@@ -6,15 +6,15 @@ import { Router, RouterModule } from '@angular/router';
 import { ReCaptchaV3Service } from 'ng-recaptcha';
 import { environment } from '../../environments/environment';
 
-@Component({
-  selector: 'app-admin',
-  templateUrl: './admin.component.html',
-  styleUrls: ['./admin.component.css']
-})
 
-export class AdminComponent   implements OnInit {
+@Component({
+  selector: 'app-dealer',
+  templateUrl: './dealer.component.html',
+  styleUrls: ['./dealer.component.css']
+})
+export class DealerComponent {
   title = 'carbookingsystem';
-  adminLogin: FormGroup;
+  dealerLogin: FormGroup;
   submitted = false; 
   formData: any;
    body: any;
@@ -25,7 +25,7 @@ export class AdminComponent   implements OnInit {
   
   constructor(private formBuilder: FormBuilder,  private http: HttpClient) {}
   ngOnInit() {
-      this.adminLogin = this.formBuilder.group({
+      this.dealerLogin = this.formBuilder.group({
         adminID: [null, [Validators.required]],
         password: [null, Validators.required]
       });
@@ -33,18 +33,18 @@ export class AdminComponent   implements OnInit {
   }
 
   isFieldInvalid(field: string) {
-    return !this.adminLogin.get(field).valid && this.adminLogin.get(field).touched;
+    return !this.dealerLogin.get(field).valid && this.dealerLogin.get(field).touched;
   }
 
   isFieldValid(field: string) {
-    return this.adminLogin.get(field).valid && this.adminLogin.get(field).touched;
+    return this.dealerLogin.get(field).valid && this.dealerLogin.get(field).touched;
   }
 
   onSubmit() {
 
-    this.validateAllFormFields(this.adminLogin);
-    if (this.adminLogin.valid) {
-      this.formData = this.adminLogin.value;
+    this.validateAllFormFields(this.dealerLogin);
+    if (this.dealerLogin.valid) {
+      this.formData = this.dealerLogin.value;
 
          this.body = {
                     formData: this.formData
@@ -53,7 +53,7 @@ export class AdminComponent   implements OnInit {
         // this.myHttpService.login(this.formData).subscribe(response => {
         //
         // });
-        const url = `${environment.apiUrl}/admin`;
+        const url = `${environment.apiUrl}/dealer`;
         
         this.http.post(url, this.formData,{ responseType: 'json' }).subscribe(
         
@@ -61,7 +61,7 @@ export class AdminComponent   implements OnInit {
             // Handle the response here
             const routeId = response.routeid;
             // this.router.navigate(['/adminDashboard']);
-            window.location.href = 'http://localhost:4200/adminDashboard';
+            window.location.href = 'http://localhost:4200/dealerDashboard';
             console.log(routeId);
           },
           error => {
@@ -90,5 +90,3 @@ validateAllFormFields(formGroup: FormGroup) {
   
     }
     
-
-

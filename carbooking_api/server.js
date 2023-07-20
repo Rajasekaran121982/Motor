@@ -5,11 +5,20 @@ const { PubSub } = require('@google-cloud/pubsub');
 const nodemailer = require('nodemailer');
 const twilio = require('twilio');
 const Multer = require('multer');
-
+const { Spanner } = require('@google-cloud/spanner');
 const path = require('path');
 const port = 3000; // Change to the desired port number
 const cors = require('cors');
-const pubsub = new PubSub();
+const { v4: uuidv4 } = require('uuid');
+const { request } = require('http');
+const { Console } = require('console');
+const pubsub = new PubSub(
+
+  {
+    keyFilename: path.join(__dirname, 'google-cloud-key.json'), 
+    projectId: 'gcds-oht33885u6-2023',  
+  }
+);
 const topicName = 'OTP_Request';
 const subscriptionName = 'OTP_Request-sub';
 const subscription = pubsub.subscription(subscriptionName);
@@ -24,6 +33,50 @@ const transporter = nodemailer.createTransport({
 });
 
 const twilioClient = twilio('ACde7362cfa65e524fdd851ee88bd82e58', 'c7643cca1cc5abe6b1c4a7c281942645');
+
+
+
+
+
+const carbookingsystemSchema = `
+  CREATE TABLE CarBooking (
+    bookingId STRING(MAX) NOT NULL,
+    name STRING(MAX) NOT NULL,
+    carModel STRING(MAX) NOT NULL,
+    pickupDate DATE NOT NULL,
+    returnDate DATE NOT NULL
+  ) PRIMARY KEY (bookingId)
+`;
+
+
+
+
+
+
+
+// Gets a reference to the instance
+
+// asia-south2 (Delhi)
+// Define the instance configuration
+
+const spanner = new Spanner({
+  keyFilename: path.join(__dirname, 'google-cloud-key.json'),
+  projectId: 'gcds-oht33885u6-2023',
+});
+
+const instance = spanner.instance('carbooking');
+const database = instance.database('carbookingsystem');
+
+
+
+
+
+const instanceConfig = 'asia-south2 (Delhi)';
+
+
+
+
+
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
@@ -199,7 +252,7 @@ app.post('/api/login', async (req, res) => {
     console.log('rajatesting - '+storedData);
     if (storedData.password === password) {
       console.log('Login successful');
-      res.status(200).json({ message: 'Login successful' });
+      res.status(200).json({ userid: UserEmailId });
     } else {
       console.log('Invalid email or password');
       res.status(401).json({ message: 'Invalid email or password' });
@@ -251,6 +304,51 @@ app.post('/api/admin', async (req, res) => {
     res.status(500).send('Error logging in');
   }
 });
+
+
+app.post('/api/dealer', async (req, res) => {
+  
+  
+  const UserEmailId = 'dealer@gmail.com';
+  const password=req.body.password;
+
+  try {
+    // Implement your logic to verify the login credentials
+
+    if (!UserEmailId) {
+      console.log('UserEmailId is missing');
+      
+      res.status(400).json({ message: 'UserEmailId is missing' });
+      return;
+    }
+
+    // Retrieve the necessary data from the Google Cloud Storage bucket based on the login information
+    const filename = `login_${UserEmailId}.json`;
+    const file = bucket.file(filename);
+    const [data] = await file.download();
+    
+
+    // Validate the password against the stored data
+    const storedData = JSON.parse(data.toString());
+    
+    if (storedData.password === password) {
+      console.log('Login successful');
+      if (!res.headersSent) // if doesn't sent yet
+    res.status(200).send({ "routeid": "/dealerDashboard" })
+      
+      
+      return;
+    } else {
+      console.log('Invalid email or password');
+      res.status(401).json({ message: 'Invalid email or password' });
+    }
+  } catch (error) {
+    console.error('Error logging in:', error);
+    res.status(500).send('Error logging in');
+  }
+});
+
+
 
 // Define the API endpoint for file upload
 app.post('/api/upload', upload.single('file'), (req, res, next) => {
@@ -345,7 +443,83 @@ app.post('/api/cars', upload.single('image'),async(req, res, next) => {
 
 
 
+// Database code and API call
 
+
+
+app.post('/api/bookings', async (req, res) => {
+  
+  const newBooking = req.body; // Assuming the request body contains the new booking details
+
+  console.log(newBooking.bookingId);
+  const bookingId = generateUniqueBookingId();
+  database.runTransaction(async (err, transaction) => {
+    if (err) {
+      console.error(err);
+      return;
+    }
+    try {
+
+      
+      const name = newBooking.name;
+      const carModel = newBooking.carModel;
+      const pickupDate = newBooking.pickupDate;
+      const returnDate = newBooking.returnDate;
+
+      const [rowCount] = await transaction.runUpdate({
+        sql: `INSERT CustomerCarBookingDetails (bookingId, name, carModel, pickupDate, returnDate) VALUES
+        (@bookingId, @name, @carModel, @pickupDate, @returnDate)`,
+        params: {
+          bookingId: bookingId,
+          name: name,
+          carModel: carModel,
+          pickupDate: pickupDate,
+          returnDate: returnDate,
+        },
+      });
+      console.log(`${rowCount} records inserted.`);
+      await transaction.commit();
+    } catch (err) {
+      console.error('ERROR:', err);
+      transaction.end();
+    } finally {
+      // Close the database when finished.
+      
+    }
+  });
+}); 
+
+function generateUniqueBookingId() {
+  const timestamp = Date.now();
+  const random = Math.floor(Math.random() * 10000); // You can adjust the range of random numbers if needed
+  const uniqueId = timestamp * 10000 + random;
+  return uniqueId;
+}
+   
+app.get('/api/customerbookings', async (req, res) => {
+  try {
+    // Run a SQL query to fetch data from the table
+    const [rows] = await database.run({
+      sql: 'SELECT * FROM CustomerCarBookingDetails',
+    });
+
+    const customerBookings = rows.map((row) => row.toJSON({ wrapNumbers: true })); // Use wrapNumbers: true
+// const customerBookings = rows.map((row) => {
+//       return {
+//         bookingId: row.bookingId.value, // Extract the value from the object
+//         name: row.name,
+//         carModel: row.carModel,
+//         pickupDate: row.pickupDate,
+//         returnDate: row.returnDate,
+//       };
+//     });
+    console.log(customerBookings);
+    res.json(customerBookings);
+  } catch (error) {
+    console.error('Error retrieving customer bookings:', error);
+    res.status(500).json({ error: 'Error retrieving customer bookings' });
+  }
+});
 
 
 

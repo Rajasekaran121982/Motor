@@ -27,6 +27,15 @@ import { AdmindashboardComponent } from './admindashboard/admindashboard.compone
 import { Router, RouterModule } from '@angular/router';
 import { FileUploadService } from './service/file-upload.service';
 import { UserdashboardComponent } from './userdashboard/userdashboard.component';
+import { SharedLogoutButtonComponentComponent } from './shared-logout-button-component/shared-logout-button-component.component';
+import { DealerComponent } from './dealer/dealer.component';
+import { DealrDashboardComponent } from './dealr-dashboard/dealr-dashboard.component';
+import { CustomerBookingService} from './service/customer-booking.service';
+import { MatTableModule } from '@angular/material/table'; // Make sure MatTableModule is imported
+import { MatSortModule } from '@angular/material/sort'; 
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { ScrollingModule } from '@angular/cdk/scrolling'; 
+
 
 
 
@@ -41,6 +50,10 @@ import { UserdashboardComponent } from './userdashboard/userdashboard.component'
     UserLoginComponent,
     AdmindashboardComponent,
     UserdashboardComponent,
+    SharedLogoutButtonComponentComponent,
+    DealerComponent,
+    DealrDashboardComponent,
+    
     
   ],
   imports: [
@@ -62,7 +75,10 @@ import { UserdashboardComponent } from './userdashboard/userdashboard.component'
     ReactiveFormsModule,
     HttpClientModule,
     RouterModule,
-    
+    MatTableModule,
+    MatSortModule,
+    MatSnackBarModule,
+    ScrollingModule,
     
   ],
   exports: [RouterModule],
@@ -74,6 +90,9 @@ import { UserdashboardComponent } from './userdashboard/userdashboard.component'
 {
   provide: FileUploadService,
       useClass: FileUploadService
+},
+{ provide: CustomerBookingService,
+      useClass: CustomerBookingService
 }
 
 

@@ -19,7 +19,8 @@
           <div class="col-sm">
 
               <div class="heading">
-                  <h2>2023 model</h2>
+                <h4>Welcome to {{bookingID}}</h4>
+                  <h5>2023 model</h5>
                   
               </div>
 
@@ -150,8 +151,9 @@
 
               <div class="text-center placeorder-container">
                   <button type="button" data-toggle="modal" data-target="#contactModal"
-                      class="btn btn-outline-dark placeorder"> PLACE ORDER
+                      class="btn btn-outline-dark placeorder" (click)="createBooking()"> BOOKING
                   </button>
+                  
               </div>
 
 
@@ -228,6 +230,8 @@
       </div>
   </div>
 </div>
+
+
 
 
 

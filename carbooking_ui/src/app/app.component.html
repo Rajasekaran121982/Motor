@@ -20,16 +20,12 @@
       <button mat-menu-item routerLink="#">
           <mat-icon>person</mat-icon><span>My Account</span>
       </button>
-      <button mat-menu-item routerLink="#">
-          <mat-icon>settings</mat-icon><span>Settings</span>
-      </button>
-      <button mat-menu-item routerLink="#">
-          <mat-icon>help</mat-icon><span>Help</span>
-        </button>
+      
+      
         <mat-divider></mat-divider>
-        <button mat-menu-item routerLink="#">
-            <mat-icon>exit_to_app</mat-icon>Logout
-        </button>
+        <app-shared-logout-button-component></app-shared-logout-button-component>
+        
+
     </mat-menu>
 </mat-toolbar>
 
@@ -63,7 +59,7 @@
                   <a mat-list-item routerLink="#">
                       <mat-icon>Register</mat-icon><span>Register</span>
                   </a>
-                  <a mat-list-item routerLink="#">
+                  <a mat-list-item routerLink="/dealer"  routerLinkActive="activebutton"  ariaCurrentWhenActive="page">
                     <mat-icon>login</mat-icon><span>Login</span>
                 </a>
                   <a mat-list-item routerLink="#">
